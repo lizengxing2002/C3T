@@ -233,7 +233,7 @@ class C3T(nn.Module):
         if self.evidence is not None:
             gain = 2 * torch.tanh(self.evidence(f).float().reshape(shape))
             d = d + gain * wx[:, None]
-        u, projected, ev, w = self.projector(d, lv, c.precision_weighted)
+        _, projected, ev, w = self.projector(d, lv, c.precision_weighted)
         refinement_nodes = None
         refinement_confidence = None
         if self.refinement is not None:
@@ -249,11 +249,11 @@ class C3T(nn.Module):
                 full_features, x, coarse_images, pixel_var
             )
             correction_w = haar(correction.flatten(0, 1)[:, None], c.wavelet_levels).reshape_as(d)
-            # The correction is a graph gradient; reproject the augmented evidence.
-            # P_W(d+B*r)=P_W(d)+B*r. The error theorem concerns this augmented d,
-            # not a guarantee that a learned refiner improves the original prediction.
+            # The correction is a graph gradient, so P_W leaves it untouched:
+            # P_W(d + B*r) = P_W(d) + B*r and the covariance is unchanged.
             d = d + correction_w
-            u, projected, ev, w = self.projector(d, lv, c.precision_weighted)
+            if c.project:
+                projected = projected + correction_w
         effective = projected if c.project else d
         effective_var = ev if c.project else lv.exp()
         edge_images = ihaar(effective.flatten(0, 1), c.wavelet_levels).reshape(b, 3, *x.shape[-2:])
