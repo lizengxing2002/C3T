@@ -101,6 +101,32 @@ class NetworkTests(unittest.TestCase):
             self.assertTrue(all(bool(torch.isfinite(g).all()) for g in grads))
             self.assertGreater(sum(g.abs().sum().item() for g in grads), 0)
 
+    def test_nll_stop_gradient_isolates_log_variance(self):
+        # The likelihood target is sg[(x~ - y)^2], so the precision head is the only
+        # differentiable variable in L_nll and the image losses never reach it.
+        net = C3T(ModelConfig(width=8))
+        torch.nn.init.normal_(net.proposal.weight, std=0.05)
+        torch.nn.init.normal_(net.evidence.weight, std=0.05)
+        x = torch.rand(3, 1, 32, 32)
+        y = 0.6 * x + 0.1
+        s = torch.tensor([0, 1, 2])
+        t = torch.tensor([1, 2, 0])
+        _, terms = objective(net(x, s), x, y, t)
+        bias = torch.autograd.grad(terms['nll'], net.logvar.bias, retain_graph=True)[0]
+        self.assertGreater(float(bias.abs().max()), 0)
+        for head in (net.proposal, net.evidence):
+            grad = torch.autograd.grad(
+                terms['nll'], head.weight, retain_graph=True, allow_unused=True
+            )[0]
+            self.assertTrue(grad is None or float(grad.abs().max()) == 0)
+        image = torch.autograd.grad(
+            sum(value for key, value in terms.items() if key != 'nll'),
+            net.logvar.bias,
+            retain_graph=True,
+            allow_unused=True,
+        )[0]
+        self.assertTrue(image is None or float(image.abs().max()) == 0)
+
     def test_toy_fit_reduces_pixel_error(self):
         net = C3T(ModelConfig(width=8, global_context=False))
         opt = torch.optim.Adam(net.parameters(), lr=0.002)
