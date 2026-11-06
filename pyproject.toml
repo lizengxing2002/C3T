@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "c3t"
+version = "1.0.0"
+description = "Conservative Cross-Contrast Transport for consistent and uncertainty-aware multi-contrast MRI synthesis"
+requires-python = ">=3.9"
+dependencies = [
+    "torch>=2.3",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "scikit-image>=0.21",
+    "opencv-python>=4.8",
+]
+
+[tool.setuptools]
+packages = ["c3t"]

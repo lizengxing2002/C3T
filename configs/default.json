@@ -1,0 +1,26 @@
+{
+  "seed": 2026,
+  "model": {
+    "width": 32,
+    "wavelet_levels": 2,
+    "project": true,
+    "precision_weighted": true,
+    "signed_evidence": true,
+    "global_context": true,
+    "potential_refinement": true
+  },
+  "steps": 60000,
+  "batch_size": 8,
+  "validation_batch_size": 2,
+  "lr": 2e-4,
+  "min_lr": 1e-6,
+  "warmup_steps": 500,
+  "weight_decay": 1e-4,
+  "ema": 0.999,
+  "amp": true,
+  "threads": 2,
+  "validate_every": 2000,
+  "log_every": 100,
+  "anchor_weight": 0.05,
+  "anchor_every": 4
+}
