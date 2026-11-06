@@ -85,6 +85,5 @@ def objective(result, x, y, target, weights=None):
 
 
 def anchor_consistency(a, b):
-    # Same-anatomy real paired views should predict compatible contrast differences.
-    # This is a soft training hypothesis, not an exact encoder invariance guarantee.
+    # Paired views of the same anatomy should predict compatible contrast differences.
     return F.smooth_l1_loss(a['edges'], b['edges'])

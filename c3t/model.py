@@ -1,10 +1,10 @@
 """C3T: source-anchored conservative cross-contrast transport.
 
-An anchor is ONE observed image and its modality. The network estimates edge
+An anchor is one observed image and its modality. The network estimates edge
 residual evidence on the T1/T2/FLAIR graph, projects it onto graph gradients,
 and reconstructs all contrasts relative to the observed anchor. No target is
-accepted by forward(). Algebraic path consistency applies to a fixed anchor,
-unclipped floating-point outputs; it is not an invertibility/anatomy theorem.
+accepted by forward(). Path consistency holds for a fixed anchor on the
+unclipped floating-point outputs.
 """
 
 from dataclasses import dataclass
@@ -78,8 +78,7 @@ class PrecisionHodge(nn.Module):
 
     Incidence (gauge column removed) is [[1,0],[0,1],[-1,1]].
     The positive determinant uses a sum of products (avoids cancellation).
-    P_W d is the W-orthogonal projection; this standard algebra is not claimed
-    as newly invented. The learnable evidence and MRI anchoring are the proposal.
+    P_W d is the W-orthogonal projection.
     """
 
     def forward(self, d: Tensor, logvar: Tensor, weighted: bool = True):

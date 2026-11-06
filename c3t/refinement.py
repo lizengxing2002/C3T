@@ -1,8 +1,7 @@
 """Graph-consistent multiscale potential refinement (GCMR).
-A minor source-only refinement, not a new Hodge or Laplacian-pyramid theorem.
+
 Predicting node potentials rather than independent target residuals preserves
-fixed-anchor graph consistency. Gates use detached *estimated* confidence,
-not a claim of calibrated clinical uncertainty.
+fixed-anchor graph consistency. Gates use detached estimated confidence.
 """
 
 import torch
