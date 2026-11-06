@@ -1,7 +1,10 @@
-import inspect, unittest
+import inspect
+import unittest
+
 import torch
-from c3t.model import C3T, ModelConfig, PrecisionHodge, haar, ihaar, inverse_diagonal_variance
+
 from c3t.losses import objective
+from c3t.model import C3T, ModelConfig, PrecisionHodge, haar, ihaar, inverse_diagonal_variance
 
 torch.set_num_threads(2)
 

@@ -1,7 +1,10 @@
-import unittest, torch
-from c3t.model import C3T, ModelConfig, haar
-from c3t.refinement import GraphConsistentRefinement, node_to_edges
+import unittest
+
+import torch
+
 from c3t.losses import objective
+from c3t.model import C3T, ModelConfig
+from c3t.refinement import GraphConsistentRefinement, node_to_edges
 
 
 class RefinementTests(unittest.TestCase):

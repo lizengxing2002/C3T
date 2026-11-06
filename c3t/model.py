@@ -7,11 +7,13 @@ accepted by forward(). Algebraic path consistency applies to a fixed anchor,
 unclipped floating-point outputs; it is not an invertibility/anatomy theorem.
 """
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Dict
+
 import torch
 from torch import Tensor, nn
 import torch.nn.functional as F
+
 from .refinement import GraphConsistentRefinement
 
 MODALITIES = ('T1', 'T2', 'FLAIR')
