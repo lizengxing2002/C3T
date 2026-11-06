@@ -69,7 +69,9 @@ def objective(result, x, y, target, weights=None):
         'gradient': gradient_loss(p, y),
         'wavelet': F.l1_loss(haar(p, 2), haar(y, 2)),
         'raw': F.l1_loss(raw, y),
-        'nll': 0.5 * ((raw - y).square() / var + var.log()).mean(),
+        # The squared residual is a fitted target, so stop-gradient leaves log-variance
+        # as the only differentiable variable: it is supervised purely as a precision.
+        'nll': 0.5 * ((raw - y).square().detach() / var + var.log()).mean(),
         'curl': (
             result['raw_wavelet_edges'][:, 0]
             + result['raw_wavelet_edges'][:, 2]
